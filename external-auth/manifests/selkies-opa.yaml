@@ -37,7 +37,7 @@ spec:
         value:
           name: envoy.ext_authz
           typed_config:
-            "@type": "type.googleapis.com/envoy.config.filter.http.ext_authz.v3.ExtAuthz"
+            "@type": "type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz"
             status_on_error:
               code: ServiceUnavailable
             
@@ -172,3 +172,20 @@ spec:
         image: openpolicyagent/kube-mgmt:0.12.1
         args:
           - --enable-data
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/name: broker
+  name: deny-all
+  namespace: opa
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          install.operator.istio.io/owner-kind: IstioControlPlane
+  podSelector: {}
+  policyTypes:
+  - Ingress
