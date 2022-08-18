@@ -33,11 +33,11 @@ spec:
               subFilter:
                 name: "envoy.filters.http.router"
       patch:
-        operation: INSERT_FIRST
+        operation: INSERT_BEFORE
         value:
           name: envoy.ext_authz
           typed_config:
-            '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            "@type": "type.googleapis.com/envoy.config.filter.http.ext_authz.v3.ExtAuthz"
             status_on_error:
               code: ServiceUnavailable
             
@@ -155,7 +155,7 @@ spec:
           defaultMode: 420
       containers:
       - name: opa
-        image: openpolicyagent/opa:0.28.0-istio
+        image: openpolicyagent/opa:0.43.0-istio
         args:
         - "run"
         - "--server"
