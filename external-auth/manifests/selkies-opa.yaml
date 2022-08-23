@@ -126,7 +126,7 @@ spec:
   selector:
     app: opa
   ports:
-    - name: http-opa-istio
+    - name: http2-opa-istio
       port: 9191
       targetPort: 9191
 ---
@@ -171,24 +171,24 @@ spec:
         image: openpolicyagent/kube-mgmt:0.12.1
         args:
           - --enable-data
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   labels:
-#     app.kubernetes.io/name: broker
-#   name: deny-all
-#   namespace: opa
-# spec:
-#   ingress:
-#   - from:
-#     - namespaceSelector: {}
-#         # matchLabels:
-#         #   install.operator.istio.io/owner-kind: IstioControlPlane
-#   egress: 
-#   - to: 
-#     - namespaceSelector: {}
-#   podSelector: {}
-#   policyTypes:
-#   - Ingress
-#   - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/name: broker
+  name: allow-istio
+  namespace: opa
+spec:
+  ingress:
+  - from:
+    - namespaceSelector: 
+        matchLabels:
+          install.operator.istio.io/owner-kind: IstioControlPlane
+  egress: 
+  - to: 
+    - namespaceSelector: {}
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
